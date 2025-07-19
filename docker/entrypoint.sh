@@ -4,7 +4,7 @@
 USER_HOME="/home/ubuntu"
 MATHICS_DJANGO_SYSTEM_DB_PATH="${USER_HOME}/.local/var/Mathics3/mathics.sqlite"
 
-export PATH="/opt/python3.12/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${USER_HOME}/.local/bin"
+export PATH="/opt/python3.13/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${USER_HOME}/.local/bin"
 export PYTHONBREAKPOINT=trepan.api.debug
 
 script_cmd="${ENTRYPOINT_COMMAND:-$(basename $0)}"

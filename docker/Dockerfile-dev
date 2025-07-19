@@ -1,4 +1,4 @@
-FROM ubuntu:24.10
+FROM ubuntu:25.04
 
 ENV MATHICS3_HOME=/home/ubuntu
 
@@ -48,7 +48,7 @@ RUN apt-get install -y -qq \
     pkg-config \
     pyqt5-dev-tools \
     python3-pip \
-    python3.12-venv \
+    python3.13-venv \
     remake \
     rustc \
     sqlite3 \
@@ -61,10 +61,10 @@ RUN apt-get install -y -qq \
 # # defer deletion until close to the end
 # # RUN rm -fr /tmp*_amd64.deb
 
-RUN /usr/bin/python3.12 -m venv /opt/python3.12
-ENV PATH=.:/opt/python3.12/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYTHON=/opt/python3.12/bin/python3.12
-ENV PIP=/opt/python3.12/bin/pip
+RUN /usr/bin/python3.13 -m venv /opt/python3.13
+ENV PATH=.:/opt/python3.13/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHON=/opt/python3.13/bin/python3.13
+ENV PIP=/opt/python3.13/bin/pip
 RUN $PYTHON -m pip install --upgrade pip
 
 ####################
@@ -78,10 +78,10 @@ RUN (cd stopit && $PIP install -e .)
 # # Mathics core #
 # ################
 
-RUN git clone --depth 1 https://github.com/Mathics3/mathics-scanner.git
+RUN git clone --depth 1 --branch release-2.0.0 https://github.com/Mathics3/mathics-scanner.git
 RUN (cd mathics-scanner && $PIP install -e .[full])
 RUN $PIP install cython trepan3k
-RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
+RUN git clone --depth 1 --branch release-9.0 https://github.com/Mathics3/mathics-core.git
 # For reasons I don't understand, "submodule init" only adds the first repository.
 # We need to add the second repository Rubi, explicitly
 RUN (cd mathics-core && git submodule update --init --recursive && \
@@ -92,14 +92,16 @@ RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 ##############################################
 # Mathics Modules: Trepan, Graph, and Natlang
 ##############################################
-RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
-RUN (cd Mathics3-trepan && $PIP install -e .)
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-Module-Base.git
+RUN (cd Mathics3-Module-Base && $PIP install -e .)
+# RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
+# RUN (cd Mathics3-trepan && $PIP install -e .)
 
-RUN git clone --depth 1 https://github.com/Mathics3/trepan3k-mathics-debugger/
-RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
+# RUN git clone --depth 1 https://github.com/Mathics3/trepan3k-mathics-debugger/
+# RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
 
-RUN $PIP install -e git+https://github.com/Mathics3/pymathics-graph#egg=pymathics-graph
-RUN $PIP install -e git+https://github.com/Mathics3/pymathics-natlang#egg=pymathics-natlang
+# RUN $PIP install -e git+https://github.com/Mathics3/pymathics-graph#egg=pymathics-graph
+# RUN $PIP install -e git+https://github.com/Mathics3/pymathics-natlang#egg=pymathics-natlang
 # # RUN $PIP install "pymathics-natlang>=8"
 
 RUN $PIP install spacy
@@ -145,7 +147,7 @@ RUN mv -v doc_html_data.pcl /home/ubuntu/mathics-django/mathics_django/doc/doc_d
 # Mathicsscript  #
 ##################
 
-RUN git clone https://github.com/Mathics3/mathicsscript.git
+RUN git clone --depth 1 --branch release-9.0.0 https://github.com/Mathics3/mathicsscript.git
 RUN (cd mathicsscript && PYTHON=$PYTHON make install)
 
 RUN ${PYTHON} -m pip install mathicsscript[full]

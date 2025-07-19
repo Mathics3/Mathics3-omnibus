@@ -1,1 +1,1 @@
-Dockerfile-release
+Dockerfile-dev
