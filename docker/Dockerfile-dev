@@ -80,7 +80,10 @@ RUN (cd stopit && $PIP install -e .)
 
 RUN git clone --depth 1 --branch release-2.0.0 https://github.com/Mathics3/mathics-scanner.git
 RUN (cd mathics-scanner && $PIP install -e .[full])
-RUN $PIP install cython trepan3k
+RUN $PIP install cython
+RUN $PIP install git+https://github.com/rocky/python-xdis.git
+RUN $PIP install git+https://github.com/Trepan-Debuggers/python3-trepan.git
+
 RUN git clone --depth 1 --branch release-9.0 https://github.com/Mathics3/mathics-core.git
 # For reasons I don't understand, "submodule init" only adds the first repository.
 # We need to add the second repository Rubi, explicitly
@@ -94,15 +97,15 @@ RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 ##############################################
 RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-Module-Base.git
 RUN (cd Mathics3-Module-Base && $PIP install -e .)
-# RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
-# RUN (cd Mathics3-trepan && $PIP install -e .)
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
+RUN $PIP install mathics-pygments
+RUN (cd Mathics3-trepan && $PIP install -e . --no-build-isolation --no-deps)
 
-# RUN git clone --depth 1 https://github.com/Mathics3/trepan3k-mathics-debugger/
-# RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
+RUN git clone --depth 1 https://github.com/Mathics3/trepan3k-mathics-debugger/
+RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
 
-# RUN $PIP install -e git+https://github.com/Mathics3/pymathics-graph#egg=pymathics-graph
-# RUN $PIP install -e git+https://github.com/Mathics3/pymathics-natlang#egg=pymathics-natlang
-# # RUN $PIP install "pymathics-natlang>=8"
+RUN $PIP install -e "git+https://github.com/Mathics3/pymathics-graph#egg=Mathics3-graph"
+RUN $PIP install -e "git+https://github.com/Mathics3/pymathics-natlang#egg=pymathics-natlang"
 
 RUN $PIP install spacy
 RUN $PYTHON -m spacy download en_core_web_md
