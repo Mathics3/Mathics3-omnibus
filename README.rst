@@ -40,8 +40,8 @@ It is likely that in the future more components will be added, so stay tuned...
 .. |Pypi Installs| image:: https://pepy.tech/badge/Mathics-omnibus
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/Mathics-omnibus.svg
 
-Intalling
----------
+Installing
+----------
 
 From pre-built artificats:
 ++++++++++++++++++++++++++
