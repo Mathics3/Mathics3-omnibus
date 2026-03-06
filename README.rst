@@ -7,9 +7,9 @@ Mathics3 is a general-purpose computer algebra system (CAS). It is an open-sourc
 For example, if you are interested in just running a command-line interface, you might not be interested in having Django and what that entails, and vice versa.
 If you are just interested in the computational library, there is no need for either the Web parts or the command-line library parts.
 
-But what if you want both command-line interface, the Web interface, all of the Mathics3 Modules and whatever else there is to offer?
+But what if you want both the command-line interface, the Web interface, all of the Mathics3 Modules, and whatever else there is to offer?
 
-That's what this repository is about. Here we have a PyPI installable package that pull in the various components and offer commands:
+That's what this repository is about. Here we have a PyPI installable package that pulls in the various components and offers commands:
 
 * ``mathics3-tokens`` utility to show how an input stream is tokenized by Mathics3
 * ``mathicsscript`` to run the command-line interface,
@@ -40,14 +40,13 @@ It is likely that in the future more components will be added, so stay tuned...
 .. |Pypi Installs| image:: https://pepy.tech/badge/Mathics-omnibus
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/Mathics-omnibus.svg
 
-
-Docker-specific items
----------------------
+Intalling
+---------
 
 From pre-built artificats:
 ++++++++++++++++++++++++++
 
-The easier ways to install are to using Python ``pip`` and ``docker``
+The easier ways to install are to use Python ``pip`` and ``docker``
 
 To install from Python ``pip``::
 
@@ -57,18 +56,18 @@ To install the Docker image, run::
 
   docker pull mathicsorg/mathics
 
-See `<https://hub.docker.com/r/mathicsorg/mathics>`_ for more information on how to use after installing
+See `<https://hub.docker.com/r/mathicsorg/mathics>`_ for more information on how to use it after installing
 
 From GitHub:
 ++++++++++++
 
-Beware that there is alwaysa bit of churn in the code base. So what is in GitHub in the master right branch might not line with with all the changes across all the repositories.
+Beware that there is always a bit of churn in the code base. So what is in GitHub in the master right branch might not line up with all the changes across all the repositories.
 
-Either before a release or right after a release, things generally match up though.
+Either before a release or right after a release, things generally match up, though.
 
-I won't repeat how to install Python in developer mode, build a Python package, or how create an docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
+I won't repeat how to install Python in developer mode, build a Python package, or how to create an docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
 
-However Python PIP, ``pyrpoject.toml`` is the an import file to consult. And for Docker, the file is ``docker/Dockerfile``.
+However, Python PIP, ``pyrpoject.toml`` is an important file to consult. And for Docker, the file is ``docker/Dockerfile``.
 
 
 Docker-specific items
