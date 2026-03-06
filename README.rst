@@ -44,6 +44,36 @@ It is likely that in the future more components will be added, so stay tuned...
 Docker-specific items
 ---------------------
 
+From pre-built artificats:
+++++++++++++++++++++++++++
+
+The easier ways to install are to using Python ``pip`` and ``docker``
+
+To install from Python ``pip``::
+
+  pip install Mathics-omnibus
+
+To install the Docker image, run::
+
+  docker pull mathicsorg/mathics
+
+See `<https://hub.docker.com/r/mathicsorg/mathics>`_ for more information on how to use after installing
+
+From GitHub:
+++++++++++++
+
+Beware that there is alwaysa bit of churn in the code base. So what is in GitHub in the master right branch might not line with with all the changes across all the repositories.
+
+Either before a release or right after a release, things generally match up though.
+
+I won't repeat how to install Python in developer mode, build a Python package, or how create an docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
+
+However Python PIP, ``pyrpoject.toml`` is the an import file to consult. And for Docker, the file is ``docker/Dockerfile``.
+
+
+Docker-specific items
+---------------------
+
 By default, we use a SQLite database that has examples that you can
 load and use. This data comes from
 `mathics-omnibus/django-db/mathics.sqlite <https://github.com/Mathics3/mathics-omnibus/tree/master/docker/django-db>`_.
