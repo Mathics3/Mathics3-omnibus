@@ -12,24 +12,24 @@ But what if you want both the command-line interface, the Web interface, all of 
 That's what this repository is about. Here we have a PyPI installable package that pulls in the various components and offers commands:
 
 * ``mathics3-tokens`` utility to show how an input stream is tokenized by Mathics3
-* ``mathicsscript`` to run the command-line interface,
-* ``mathicsserver`` to run the Django-Web server,
-* ``dmathicsscript`` and ``dmathicsserver``, which runs the docker version of these,
-* ``dmathicssdoc`` which runs a PDF viewer, `evince <https://wiki.gnome.org/Apps/Evince>`_, which can view the generated reference manual in PDF.
-* ``dmathicsdoccopy`` which copies the generated reference PDF manual out of the container and into the host filesystem.
+* ``mathics3script`` to run the command-line interface,
+* ``mathics3server`` to run the Django-Web server,
+* ``dmathics3script`` and ``dmathicsserver``, which runs the docker version of these,
+* ``dmathics3doc`` which runs a PDF viewer, `evince <https://wiki.gnome.org/Apps/Evince>`_, which can view the generated reference manual in PDF.
+* ``dmathics3doccopy`` which copies the generated reference PDF manual out of the container and into the host filesystem.
 
 This repository also contains the Dockerfiles used to create the `mathicsorg/mathics docker images <https://hub.docker.com/repository/docker/mathicsorg/mathics>`_.
 
 That image is a combination of:
 
-* `Mathics-Scanner <https://github.com/Mathics3/mathics-scanner>`_ (WL Character Tables and Mathics Scanner)
+* `Mathics-Scanner <https://github.com/Mathics3/Mathics3-scanner>`_ (WL Character Tables and Mathics Scanner)
 * `mathicsscript <https://github.com/Mathics3/mathicsscript>`_ (Command-line Mathics Interface)
 * `mathics-pygments <https://github.com/Mathics3/mathics-pygments>`_ (WL Syntax Highlighting)
-* `Mathics-Django <https://github.com/Mathics3/Mathics-Django>`_ (Django-based HTTP server)
+* `Mathics-Django <https://github.com/Mathics3/Mathics3-django>`_ (Django-based HTTP server)
 * `mathics-threejs-backend <https://github.com/Mathics3/mathics-threejs-backend>`_ (Graphics3D rendering using threejs)
 * `Mathics-Module-nltk <https://github.com/Mathics3/Mathics3-Module-nltk>`_ (Mathics3 Module for Natural Language Processing add-on via NLTK)
 * `Mathics-Module-PyUI <https://github.com/Mathics3/Mathics3-Module-PyUCI>`_ (Mathics3 Module for ICU - Human-Language Alphabets and Locales via PyICU)
-* `pymathics-graph <https://github.com/Mathics3/pymathics-graph>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_.
+* `pymathics-graph <https://github.com/Mathics3/Mathics3-Module-networkx>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_.
 
 It is likely that in the future more components will be added, so stay tuned...
 
