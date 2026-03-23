@@ -1,0 +1,56 @@
+#!/bin/bash
+set -e
+if [ -n "$DEBUG" ]; then
+    set -x
+fi
+
+# Allow customization using POSIX environment variables:
+DOCKER=${DOCKER:-docker}
+TEMPDIR=${TMPDIR:-/tmp}
+
+TAG=${TAG:-latest}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
+
+for arg in "$@" ; do
+    case "$arg" in
+        -u | -U | --upgrade | upgrade)
+			$DOCKER pull $MATHICS3_IMAGE
+			exit $?
+			;;
+        -h | --help | help )
+			cat <<_EOH
+Usage: dmathics3copy [OPTIONS]
+
+  A command-line routine to extract mathics documentation from a Mathics3 docker container
+
+Options specfic to dmathicsscript:
+
+  -u | -U | --upgrade | upgrade
+  Pull updates to the docker container if there is a new image.
+
+  -h| --help | help
+  Show this help.
+
+Useful Environment Variables:
+
+DOCKER: the name of the docker program to run. The default is: ${DOCKER}
+MATHICS3_IMAGE: Mathics image to use. The default is: ${MATHICS3_IMAGE}
+TAG: tag used in MATHICS3_IMAGE above. The default is: ${TAG}
+XAUTH: .Xauthority file. The default is: ${XAUTH}
+_EOH
+		exit 0 ;;
+        -u | -U | --upgrade | upgrade)
+			$DOCKER pull $MATHICS3_IMAGE
+			;;
+    esac
+done
+
+$DOCKER run -it \
+  --name mathics-copy \
+  --env "TEMPDIR=$TEMPDIR" \
+  --rm \
+  --workdir=/app \
+  --volume="$PWD":/app \
+  --volume="${TEMPDIR}:/usr/src/app/data" \
+  $MATHICS3_IMAGE \
+  --mode copy -- $@

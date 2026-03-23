@@ -6,13 +6,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Mathics3-omnibus"
-description = "A Collection Mathics components to provide the full Mathics3 experience"
+description = "A Collection Mathics3 components to provide the full Mathics3 experience"
 dependencies = [
-    "Mathics3[full] >= 9.0.0",
-    "mathicsscript[full] >=9.0.0",
-    "Mathics3-Module-nltk >= 9.0.0",
-    "Mathics3-Module-PyICU >= 9.0.0",
-    "pymathics-graph >= 8.0.1",
+    "Mathics3[full] > 9.0",
+    "mathicsscript[full] >9.0",
+    "Mathics3-Module-nltk > 9.0",
+    "Mathics3-Module-PyICU > 9.0",
+    "Mathics3-Module-networkx > 9.0",
 ]
 requires-python = ">=3.10"
 readme = "README.rst"
@@ -40,8 +40,17 @@ dynamic = ["version"]
 [project.urls]
 Homepage = "https://mathics.org/"
 
+[tool.poetry]
+include = ["script/dmathics3"]
+
+[tool.poetry.scripts]
+dmathics3 = { reference = "script/dmathics3", type = "file" }
+dmathics3-tokens = { reference = "script/dmathics3-tokens", type = "file" }
+dmathics3copy = { reference = "script/dmathics3copy", type = "file" }
+dmathics3doc = { reference = "script/dmathics3doc", type = "file" }
+
 [tool.setuptools.packages.find]
-include = ["mathics_omnibus*"]
+include = ["mathics3_omnibus*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "mathics_omnibus.version.__version__"}
+version = {attr = "mathics3_omnibus.version.__version__"}

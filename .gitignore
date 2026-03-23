@@ -9,6 +9,7 @@
 /.cache
 /.python-version
 /ChangeLog-spell-corrected
+/Mathics3_omnibus.egg-info
 /Mathics_omnibus.egg-info
 /__pycache__
 /build

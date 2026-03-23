@@ -1,13 +1,12 @@
-FROM ubuntu:jammy
+# -*- Dockerfile -*-
+FROM ubuntu:25.04
 
-ENV MATHICS_HOME=/usr/src/app
-
-ENV ASY_VERSION=asymptote-2.85
-ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang"
-
+ENV MATHICS3_HOME=/home/ubuntu
+ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang,pymathics.trepan"
 ENV ENTRYPOINT_COMMAND="docker run -it {MATHICS3_IMAGE}"
+
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
-WORKDIR $MATHICS_HOME
+WORKDIR $MATHICS3_HOME
 
 COPY requirements.txt ./
 RUN apt-get update
@@ -24,175 +23,145 @@ RUN apt-get update -y && apt-get upgrade -y -qq
 
 # Install lots of packages
 RUN apt-get install -y -qq \
+    asymptote \
     cargo \
     evince \
     gfortran \
-    git x11-apps \
+    git \
     gyp \
     latexmk texlive-xetex \
-    libffi7 \
-    libgl1-mesa-dri \
-    libgl1-mesa-glx \
+    libffi-dev \
     liblapack-dev \
     libmysqlclient-dev \
     libopenblas-dev \
+    librsvg2-bin \
+    libxcb-cursor-dev \
     libxml2-dev \
     libxslt1-dev \
-    llvm-11 \
-    llvm-11-dev \
-    llvm-12 \
-    llvm-12-dev \
+    llvm-15 \
+    llvm-15-dev \
     lmodern texlive-latex-extra \
     maria \
     mesa-utils \
     nodejs \
     npm \
     pkg-config \
+    pyqt5-dev-tools \
     python3-pip \
+    python3.13-venv \
+    remake \
     rustc \
     sqlite3 \
     texlive-fonts-recommended \
     tk8.6-blt2.5 \
+    x11-apps \
     xserver-xorg-video-all
 
-# Set up Pyston
-COPY src/*_amd64.deb /tmp/
-RUN dpkg -i /tmp/*_amd64.deb
+# # to make docker layers be more usuable in development
+# # defer deletion until close to the end
+# # RUN rm -fr /tmp*_amd64.deb
 
-# to make docker layers be more usuable in development
-# defer deletion until close to the end
-# RUN rm -fr /tmp*_amd64.deb
-
-ENV PYTHON=python3.10
-ENV PIP=/usr/bin/pip3.10
+RUN /usr/bin/python3.13 -m venv /opt/python3.13
+ENV PATH=.:/opt/python3.13/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHON=/opt/python3.13/bin/python3.13
+ENV PIP=/opt/python3.13/bin/pip
 RUN $PYTHON -m pip install --upgrade pip
-COPY src/*.py3-none-any.whl src/*x86_64*.whl /tmp/
-RUN $PIP install wheel /tmp/*.py3-none-any.whl /tmp/*x86_64.whl
-RUN $PIP install --no-cache-dir -r requirements.txt
 
-################
-# Mathics core #
-################
-# RUN $PIP install git+https://github.com/Mathics3/mathics-core.git#egg=Mathics3[full]
-# RUN pip install "Mathics3[full]>=7.0.0"
+#########################
+# Development libraries
+#########################
 
-RUN apt-get install -y -qq librsvg2-bin pyqt5-dev-tools
+RUN $PIP install --local -e git+https://github.com/rocky/python-xdis.git#egg=xdis
+RUN $PIP install --local --no-build-isolation -e git+https://github.com/rocky/python-filecache.git#egg=pyficache
+RUN $PIP install --local -e git+https://github.com/rocky/python-uncompyle6.git#egg=uncompyle6
+RUN $PIP install --local -e git+https://github.com/rocky/python-decompile3.git#egg=decompyle3
+RUN $PIP install git+https://github.com/rocky/python-filecache#egg=pyficache
+RUN $PIP install -e git+https://github.com/Trepan-Debuggers/python3-trepan#egg=trepan3k
+RUN $PIP install -e git+https://github.com/Trepan-Debuggers/python3-trepan#egg=trepan3k
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-scanner.git
+RUN (cd Mathics3-scanner && $PIP install -e .[full] && bash -x ./admin-tools/make-JSON-tables.sh)
+RUN $PIP install git+https://github.com/rocky/python-xdis.git
+RUN $PIP install git+https://github.com/Trepan-Debuggers/python3-trepan.git
 
-# We need newer versions of Asymptote and GhostScript for bulding the PDF
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y -qq freeglut3 libfftw3-double3 libglew2.2 libsigsegv2 ghostscript imagemagick texlive-pstricks
-COPY ubuntu-bin/gs /usr/local/bin/
+# #################
+# # Mathics3 core #
+# #################
 
-#--
-# build new version of Asymptote for our docs and for inside mathicsscript. The Ubuntu-distributed asymptote has bugs.
-#--
-RUN apt-get install -y -qq \
-  autoconf \
-  bison \
-  file \
-  flex \
-  freeglut3-dev \
-  libcurl3-gnutls \
-  libcurl4 \
-  libcurl4 \
-  libcurl4-gnutls-dev \
-  libgc-dev \
-  libgl-dev \
-  libglm-dev \
-  libreadline-dev \
-  libsigsegv2 \
-  texinfo
+RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
+# For reasons I don't understand, "submodule init" only adds the first repository.
+# We need to add the second repository Rubi, explicitly
+RUN (cd mathics-core && git submodule update --init --recursive && \
+    git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
+RUN (cd mathics-core && git submodule && $PIP install -e .[full])
+RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 
-COPY src/${ASY_VERSION}.src.tgz .
-RUN tar -xpf ${ASY_VERSION}.src.tgz
-RUN (cd ${ASY_VERSION} && bash ./autogen.sh && ./configure --disable-lsp && make -j3 all && make -j3 install)
+##############################################
+# Mathics Modules: Trepan, Graph, and Natlang
+##############################################
+RUN pip install Mathics3-Module-Base
+RUN pip install mathics-pygments
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
+RUN (cd Mathics3-trepan && $PIP install --no-build-isolation -e .)
 
-RUN git clone https://github.com/Mathics3/mathics-core.git
-ENV DATA_DIR=/usr/src/app/mathics-core/mathics/doc/latex/
-ENV DOCTEST_LATEX_DATA_PCL=/usr/src/app/mathics-core/mathics/doc/latex/doctext_latex_data.pcl
-ENV DOCTEST_USER_HTML_DATA_PATH=/usr/src/app/mathics-core/mathics/doc/doc_html_data.pcl
+RUN git clone --depth 1 https://github.com/Mathics3/trepan3k-mathics-debugger/
+RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
 
-COPY tex-images/*.pdf mathics-core/mathics/doc/latex/
-ENV DOC_LATEX_FILE=/usr/src/app/mathics-core/mathics/doc/latex/documentation.tex
-COPY src/documentation.tex mathics-core/mathics/doc/latex/documentation.tex
-COPY src/version-info.tex mathics-core/mathics/doc/latex/
-RUN (cd mathics-core && $PIP install -e .[full])
-RUN (cd mathics-core && bash ./admin-tools/make-op-tables.sh)
+RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathics3-Module-networkx#egg=Mathics3-Module-networkx"
+RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathics3-Module-nltk#egg=Mathics3-Module-nltk"
 
-####################################################
-# Mathics Pymathics and Pymathics Graph for Django #
-
-RUN $PIP install -e git+https://github.com/Mathics3/pymathics-graph#egg=pymathics-graph
-# RUN $PIP install "pymathics-graph>=6.2.0"
-
-RUN $PIP install -e git+https://github.com/Mathics3/pymathics-natlang#egg=pymathics-natlang
-# RUN $PIP install "pymathics-natlang>=6.2.0"
-
-RUN $PIP install spacy
-RUN $PYTHON -m spacy download en_core_web_sm
+RUN $PIP install spacy wordcloud
+RUN $PYTHON -m spacy download en_core_web_md
 RUN $PIP install nltk
-RUN $PYTHON -m nltk.downloader wordnet omw-1.4
 
-RUN (cd mathics-core && PYTHON=$PYTHON make doc) || /bin/true
+# ENV DATA_DIR=/usr/src/app/mathics-core/mathics/doc/latex/
+# ENV DOCTEST_LATEX_DATA_PCL=/usr/src/app/mathics-core/mathics/doc/latex/doctext_latex_data.pcl
+# ENV DOCTEST_USER_HTML_DATA_PATH=/usr/src/app/mathics-core/mathics/doc/doc_html_data.pcl
+
+#######################
+# LaTeX/PDF generation
+#######################
+# This has to appear after core and Mathics3 Modules have been built.
+# Making the PDF is very time consuming. For now its is easy to build outside of
+# docker and just copy in.
+
+# RUN (cd mathics-core/mathics/doc/latex && PYTHON=$PYTHON make mathics.pdf) || /bin/true
+# COPY tex-images/*.pdf mathics-core/mathics/doc/latex/
+# ENV DOC_LATEX_FILE=/usr/src/app/mathics-core/mathics/doc/latex/documentation.tex
+# # COPY src/documentation.tex mathics-core/mathics/doc/latex/documentation.tex
+# # COPY src/version-info.tex mathics-core/mathics/doc/latex/
+
+COPY src/mathics.pdf mathics-core/mathics/doc/latex/mathics.pdf
+
 ##################
 # Mathics Django #
 ##################
-RUN git clone https://github.com/Mathics3/mathics-django.git
-RUN (cd mathics-django && $PIP install -e .[full])
-# Get threejs version created
-RUN (cd mathics-django && make build)
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-django.git
+# RUN (cd Mathics3-django && $PIP install -e .[full])
+# # Get threejs version created
+RUN (cd Mathics3-django && make build)
+# # RUN $PYTHON -m pip install -e git+https://github.com/Mathics3/Mathics3-django#egg=Mathics3-Django[full]
+# # RUN $PYTHON -m pip install "Mathics-Django[full]>=7.0.0"
 
-# RUN $PYTHON -m pip install -e git+https://github.com/Mathics3/mathics-django#egg=Mathics-Django[full]
-# RUN $PYTHON -m pip install "Mathics-Django[full]>=6.2.0"
-
-# RUN (cd src/mathics-django && PIP=$PIP make)
-RUN (cd src/mathics-django && $PYTHON mathics_django/docpipeline.py -ok --want-sorting) || true
+# # RUN (cd src/Mathics3-django && PIP=$PIP make)
+# RUN (cd Mathics3-django && $PYTHON Mathics3_django/docpipeline.py -ok) || true
 COPY src/doc_html_data.pcl doc_html_data.pcl
-RUN mkdir -p /usr/src/app/.local/var/mathics && mv -v doc_html_data.pcl /usr/src/app/.local/var/mathics/doc_data_html.pcl
+RUN mv -v doc_html_data.pcl /home/ubuntu/Mathics3-django/mathics_django/doc/doc_data_html.pcl
 
 ##################
 # Mathicsscript  #
 ##################
 
-# Mathicsscript loses functionality with pyston because matplotlib doesn't render
-# images with it
-# Install python 3.10 packages
-RUn apt-get install -qq -y \
-   python3 \
-   python3-click \
-   python3-cryptography \
-   python3-cson \
-   python3-dateutil \
-   python3-matplotlib \
-   python-matplotlib-data \
-   python3-numpy \
-   python3-pip \
-   python3-psutil \
-   python3-pyqt5 \
-   python3-pyqt5.qtsvg \
-   python3-setuptools \
-   python3-sympy
-
-COPY requirements-mathicsscript.txt ./
-RUN $PIP install --no-cache-dir -r requirements-mathicsscript.txt
-RUN git clone https://github.com/Mathics3/mathicsscript.git
+RUN git clone --depth 1 https://github.com/Mathics3/mathicsscript.git
 RUN (cd mathicsscript && PYTHON=$PYTHON make install)
 
-RUN ${PYTHON} -m spacy download en_core_web_md
-RUN ${PYTHON} -m nltk.downloader wordnet omw-1.4
-
-# prompt toolkit needs an IPython that is newer than what got
-# implicitly installed above
-RUN ${PYTHON} -m pip install 'ipython>=7.23.1'
-
-# RUN ${PYTHON} -m pip install mathicsscript[full]
-RUN ${PYTHON} -m pip install -e git+https://github.com/Mathics3/mathicsscript#egg=mathicsscript[full]
-RUN (cd src/mathicsscript && make)
+RUN ${PYTHON} -m pip install mathicsscript[full]
+# RUN ${PYTHON} -m pip install -e git+https://github.com/Mathics3/mathicsscript#egg=mathicsscript[full]
+# RUN (cd src/mathicsscript && make)
 
 ##################
 # debug stuff    #
 ##################
 RUN apt-get install -y -qq emacs
-# RUN pip install trepan3k
 RUN pip install remake
 
 ##################
@@ -200,26 +169,22 @@ RUN pip install remake
 ##################
 
 # Cleanup
-RUN rm -fr /tmp*_amd64.deb /tmp/*.whl
+# RUN rm -fr /tmp*_amd64.deb /tmp/*.whl
 
 COPY entrypoint.sh /usr/local/bin/mathics-omnibus.sh
 RUN chmod +x /usr/local/bin/mathics-omnibus.sh
 
 EXPOSE 8000
 
-RUN groupadd mathics && \
-    useradd -d $MATHICS_HOME -g mathics -m -s /bin/bash mathics && \
-    mkdir -p $MATHICS_HOME/data && \
-    chown -R mathics:mathics $MATHICS_HOME
-
-COPY django-db/mathics.sqlite /usr/src/app/.local/var/mathics/mathics.sqlite
-run chown -vR mathics:mathics /usr/src/app/.local/var/mathics/mathics.sqlite
-USER mathics
-
-RUN ${PYTHON} -m spacy download en_core_web_md
-RUN ${PYTHON} -m nltk.downloader wordnet omw-1.4
-RUN pyston -m spacy download en_core_web_sm
-RUN pyston -m nltk.downloader wordnet omw-1.4
+RUN mkdir -p ${MATHICS3_HOME}/.local
+RUN mkdir -p ${MATHICS3_HOME}/.config
+RUN mkdir -p ${MATHICS3_HOME}/data
+RUN mkdir -p ${MATHICS3_HOME}/.local/var/Mathics3/Packages
+COPY django-db/mathics.sqlite ${MATHICS3_HOME}/.local/var/Mathics3/mathics.sqlite
+RUN chown -R ubuntu:ubuntu $MATHICS3_HOME ${MATHICS3_HOME}/.local
+RUN chown -R ubuntu:ubuntu ${MATHICS3_HOME}/data
+USER ubuntu
+RUN $PYTHON -m nltk.downloader wordnet2022 omw-1.4
 
 ENTRYPOINT ["/usr/local/bin/mathics-omnibus.sh"]
 

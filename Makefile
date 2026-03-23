@@ -34,7 +34,7 @@ endif
 #: Default target - same as "develop"
 all: docker-image
 
-#: Make distirbution: wheels, eggs, tarball
+#: Make distribution: wheels, eggs, tarball
 dist:
 	./admin-tools/make-dist.sh
 

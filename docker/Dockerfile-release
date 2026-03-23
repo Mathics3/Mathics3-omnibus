@@ -1,3 +1,4 @@
+# -*- Dockerfile -*-
 FROM ubuntu:24.10
 
 ENV MATHICS3_HOME=/home/ubuntu

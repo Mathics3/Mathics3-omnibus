@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 if [ -n "$DEBUG" ]; then
     set -x
@@ -18,9 +18,9 @@ for arg in "$@" ; do
         -h | --help | help )
 			cat <<_EOH
 usage:
-   dmathics [options]
+   dmathics3 [options]
 
-  A stripped-down command-line interface to Mathics run in a docker container
+  A stripped-down command-line interface to Mathics3 run in a docker container
 
 Options specfic to dmathicsdoc:
 
