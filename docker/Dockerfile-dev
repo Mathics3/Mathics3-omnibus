@@ -108,6 +108,7 @@ RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
 
 RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathics3-Module-networkx#egg=Mathics3-Module-networkx"
 RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathics3-Module-nltk#egg=Mathics3-Module-nltk"
+# RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathics3-Module-PyICU#egg=Mathics3-Module-PyICU"
 
 RUN $PIP install spacy wordcloud
 RUN $PYTHON -m spacy download en_core_web_md
@@ -130,7 +131,7 @@ RUN $PIP install nltk
 # # COPY src/documentation.tex mathics-core/mathics/doc/latex/documentation.tex
 # # COPY src/version-info.tex mathics-core/mathics/doc/latex/
 
-COPY src/mathics.pdf mathics-core/mathics/doc/latex/mathics.pdf
+COPY src/mathics3.pdf mathics-core/mathics/doc/latex/mathics3.pdf
 
 ##################
 # Mathics Django #
@@ -145,7 +146,8 @@ RUN (cd Mathics3-django && make build)
 # # RUN (cd src/Mathics3-django && PIP=$PIP make)
 # RUN (cd Mathics3-django && $PYTHON Mathics3_django/docpipeline.py -ok) || true
 COPY src/doc_html_data.pcl doc_html_data.pcl
-RUN mv -v doc_html_data.pcl /home/ubuntu/Mathics3-django/mathics_django/doc/doc_data_html.pcl
+RUN mv -v doc_html_data.pcl /home/ubuntu/.local/var/Mathics3/doc_data_html.pcl
+RUN (cd Mathics3-django && $PYTHON -m pip install --no-build-isolation -e .)
 
 ##################
 # Mathicsscript  #
@@ -154,7 +156,7 @@ RUN mv -v doc_html_data.pcl /home/ubuntu/Mathics3-django/mathics_django/doc/doc_
 RUN git clone --depth 1 https://github.com/Mathics3/mathicsscript.git
 RUN (cd mathicsscript && PYTHON=$PYTHON make install)
 
-RUN ${PYTHON} -m pip install mathicsscript[full]
+RUN (cd mathicsscript && $PYTHON -m pip install -e .[full])
 # RUN ${PYTHON} -m pip install -e git+https://github.com/Mathics3/mathicsscript#egg=mathicsscript[full]
 # RUN (cd src/mathicsscript && make)
 
@@ -181,7 +183,7 @@ RUN mkdir -p ${MATHICS3_HOME}/.local
 RUN mkdir -p ${MATHICS3_HOME}/.config
 RUN mkdir -p ${MATHICS3_HOME}/data
 RUN mkdir -p ${MATHICS3_HOME}/.local/var/Mathics3/Packages
-COPY django-db/mathics.sqlite ${MATHICS3_HOME}/.local/var/Mathics3/mathics.sqlite
+COPY django-db/mathics3.sqlite ${MATHICS3_HOME}/.local/var/Mathics3/mathics3.sqlite
 RUN chown -R ubuntu:ubuntu $MATHICS3_HOME ${MATHICS3_HOME}/.local
 RUN chown -R ubuntu:ubuntu ${MATHICS3_HOME}/data
 USER ubuntu

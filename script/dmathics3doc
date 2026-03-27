@@ -11,7 +11,7 @@ typeset dmathicsdoc_version='1.0.0'
 DOCKER=${DOCKER:-docker}
 
 TAG=${TAG:-latest}
-MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics3:${TAG}}
 
 for arg in "$@" ; do
     case "$arg" in
