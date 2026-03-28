@@ -146,6 +146,7 @@ RUN (cd Mathics3-django && make build)
 # # RUN (cd src/Mathics3-django && PIP=$PIP make)
 # RUN (cd Mathics3-django && $PYTHON Mathics3_django/docpipeline.py -ok) || true
 COPY src/doc_html_data.pcl doc_html_data.pcl
+RUN mkdir -p ${MATHICS3_HOME}/.local/var/Mathics3/
 RUN mv -v doc_html_data.pcl /home/ubuntu/.local/var/Mathics3/doc_data_html.pcl
 RUN (cd Mathics3-django && $PYTHON -m pip install --no-build-isolation -e .)
 

@@ -3,7 +3,7 @@ version: '2'
 services:
     mathics:
         build: ./docker
-        image: mathicsorg/mathics:latest
+        image: mathicsorg/mathics3:latest
 
         volumes:
             - ./app/data:/usr/src/app/data

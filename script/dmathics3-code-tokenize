@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+if [ -n "$DEBUG" ]; then
+    set -x
+fi
+
+# The release name we are configured to run under.
+typeset dmathics_version='1.0.0'
+
+# Allow customization using POSIX environment variables:
+DOCKER=${DOCKER:-docker}
+
+TAG=${TAG:-latest}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics3:${TAG}}
+
+# Show environment variables
+for env_setting in MATHICS3_IMAGE; do
+	echo $env_setting = ${!env_setting}
+done
+
+
+$DOCKER run --rm -it \
+		--name mathics-cli \
+		--volume /tmp:/usr/src/app/data \
+		$MATHICS3_IMAGE \
+		--mode mathics3-code-tokenize -- $@

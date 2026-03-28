@@ -18,7 +18,7 @@ That's what this repository is about. Here we have a PyPI installable package th
 * ``dmathics3doc`` which runs a PDF viewer, `evince <https://wiki.gnome.org/Apps/Evince>`_, which can view the generated reference manual in PDF.
 * ``dmathics3doccopy`` which copies the generated reference PDF manual out of the container and into the host filesystem.
 
-This repository also contains the Dockerfiles used to create the `mathicsorg/mathics docker images <https://hub.docker.com/repository/docker/mathicsorg/mathics>`_.
+This repository also contains the Dockerfiles used to create the `mathicsorg/mathics3 docker images <https://hub.docker.com/repository/docker/mathicsorg/mathic3s>`_.
 
 That image is a combination of:
 
@@ -54,9 +54,9 @@ To install from Python ``pip``::
 
 To install the Docker image, run::
 
-  docker pull mathicsorg/mathics
+  docker pull mathicsorg/mathics3
 
-See `<https://hub.docker.com/r/mathicsorg/mathics>`_ for more information on how to use it after installing
+See `<https://hub.docker.com/r/mathicsorg/mathics3>`_ for more information on how to use it after installing
 
 From GitHub:
 ++++++++++++

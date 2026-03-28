@@ -57,9 +57,9 @@ done
 case $mathics_mode in
     cli) mathicsscript $@
 		 ;;
-    mathics3-tokenize) mathics3-tokenizes $@
+    mathics3-code-tokenize) mathics3-code-tokenize $@
 		 ;;
-    mathics3-parse) mathics3-parse $@
+    mathics3-code-parse) mathics3-code-parse $@
 		 ;;
     minimal|mathics|mathics3)
 		mathics3 $@
