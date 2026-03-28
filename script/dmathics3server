@@ -16,7 +16,7 @@ MATHICS_DJANGO_DB=${MATHICS_DJANGO_DB:-"mathics3.sqlite"}
 MATHICS_DJANGO_DB_PATH=${MATHICS_DJANGO_DB_PATH:-${USER_HOME}/.local/var/Mathics3/${MATHICS_DJANGO_DB}}
 TAG=${TAG:-latest}
 
-MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics3:${TAG}}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
 
 typeset -a stripped_args
 stripped_args=()

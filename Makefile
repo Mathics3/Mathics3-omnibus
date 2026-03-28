@@ -40,11 +40,11 @@ dist:
 
 #: Pull mathics docker image from dockerhub with tag $(TAG). The default tag is "latest".
 docker-pull:
-	$(DOCKER) pull mathicsorg/mathics3:$(TAG)
+	$(DOCKER) pull mathicsorg/mathics:$(TAG)
 
 #: Push local docker image to dockerhub with tag $(TAG). The default tag is "latest".
 install push upload:
-	$(DOCKER) push mathicsorg/mathics3:$(TAG)
+	$(DOCKER) push mathicsorg/mathics:$(TAG)
 
 #: Build docker image with cache clearing
 docker-image:

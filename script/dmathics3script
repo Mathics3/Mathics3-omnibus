@@ -39,7 +39,7 @@ touch $XAUTH
 
 # Docker mathics contianer we use.
 # Note: has to come af we set after TAG
-MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics3:${TAG}}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
 
 
 # end customization section

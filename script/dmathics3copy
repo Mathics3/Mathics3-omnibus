@@ -9,7 +9,7 @@ DOCKER=${DOCKER:-docker}
 TEMPDIR=${TMPDIR:-/tmp}
 
 TAG=${TAG:-latest}
-MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics3:${TAG}}
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
 
 for arg in "$@" ; do
     case "$arg" in
