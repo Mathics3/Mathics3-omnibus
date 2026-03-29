@@ -5,15 +5,15 @@ if [ -n "$DEBUG" ]; then
 fi
 
 # The release name we are configured to run under.
-typeset dmathicsserver_version='2.0.0'
+typeset dmathicsserver_version='10.0.0'
 
 # Allow customization using POSIX environment variables:
 APP_DATADIR=${APP_DATADIR:-/tmp}
 DOCKER=${DOCKER:-docker}
 ASYMPTOTE_PDFVIEWER=${ASYMPTOTE_PDFVIWER:-/usr/bin/evince}
 USER_HOME="/home/ubuntu"
-MATHICS_DJANGO_DB=${MATHICS_DJANGO_DB:-"mathics3.sqlite"}
-MATHICS_DJANGO_DB_PATH=${MATHICS_DJANGO_DB_PATH:-${USER_HOME}/.local/var/Mathics3/${MATHICS_DJANGO_DB}}
+MATHICS3_DJANGO_DB=${MATHICS_DJANGO_DB:-"mathics3.sqlite"}
+MATHICS3_DJANGO_DB_PATH=${MATHICS_DJANGO_DB_PATH:-${USER_HOME}/.local/var/Mathics3/${MATHICS3_DJANGO_DB}}
 TAG=${TAG:-latest}
 
 MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
@@ -26,9 +26,9 @@ for arg in "$@" ; do
         -h | --help | help )
 			cat <<_EOH
 usage:
-   dmathicsserver [options]
+   dmathics3server [options]
 
-runs the Mathics command-line interface from a docker container.
+runs the Mathics3 command-line interface from a docker container.
 
 Options specfic to dmathicsserver:
 
@@ -39,7 +39,7 @@ Options specfic to dmathicsserver:
   show this help
 
   -V| --version
-  show the dMathics3server version and exit
+  show the dmathics3server version and exit
 
 We will now pass help along to the docker image. Just a sec...
 
@@ -50,7 +50,7 @@ _EOH
 			$DOCKER pull $MATHICS3_IMAGE
 			;;
         -v | -V | --version)
-			echo "dmathicsserver version ${dmathicsserver_version}"
+			echo "dmathics3server version ${dmathicsserver_version}"
 			exit 100
 			;;
 		default)
@@ -59,7 +59,7 @@ _EOH
 done
 
 # Show environment variables
-for env_setting in MATHICS_DJANGO_DB_PATH APP_DATADIR MATHICS3_IMAGE DISPLAY; do
+for env_setting in MATHICS3_DJANGO_DB_PATH APP_DATADIR MATHICS3_IMAGE DISPLAY; do
 	echo $env_setting = ${!env_setting}
 done
 
@@ -75,7 +75,7 @@ $DOCKER run \
 		--workdir=/app \
 		--volume="$PWD":/app \
 		--volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-		--volume="${APP_DATADIR}:/home/ubuntu/.local/var/Mathics3" \
 		--network=host \
 		$MATHICS3_IMAGE \
-		--mode ui -- $stripped_args
+		--mode ui -- $stripped_args \
+		# --volume="${APP_DATADIR}:/home/ubuntu/.local/var/Mathics3" \
