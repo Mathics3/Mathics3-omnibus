@@ -1,5 +1,5 @@
 # -*- Dockerfile -*-
-FROM ubuntu:25.04
+FROM ubuntu:26.04
 
 ENV MATHICS3_HOME=/home/ubuntu
 ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang,pymathics.trepan"
@@ -26,6 +26,7 @@ RUN apt-get install -y -qq \
     asymptote \
     cargo \
     evince \
+    enchant-2 \
     gfortran \
     git \
     gyp \
@@ -38,8 +39,8 @@ RUN apt-get install -y -qq \
     libxcb-cursor-dev \
     libxml2-dev \
     libxslt1-dev \
-    llvm-15 \
-    llvm-15-dev \
+    llvm-18 \
+    llvm-18-dev \
     lmodern texlive-latex-extra \
     maria \
     mesa-utils \
@@ -48,7 +49,7 @@ RUN apt-get install -y -qq \
     pkg-config \
     pyqt5-dev-tools \
     python3-pip \
-    python3.13-venv \
+    python3.14-venv \
     remake \
     rustc \
     sqlite3 \
@@ -61,26 +62,24 @@ RUN apt-get install -y -qq \
 # # defer deletion until close to the end
 # # RUN rm -fr /tmp*_amd64.deb
 
-RUN /usr/bin/python3.13 -m venv /opt/python3.13
-ENV PATH=.:/opt/python3.13/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYTHON=/opt/python3.13/bin/python3.13
-ENV PIP=/opt/python3.13/bin/pip
+RUN /usr/bin/python3.14 -m venv /opt/python3.14
+ENV PATH=.:/opt/python3.14/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHON=/opt/python3.14/bin/python3.14
+ENV PIP=/opt/python3.14/bin/pip
 RUN $PYTHON -m pip install --upgrade pip
 
 #########################
 # Development libraries
 #########################
 
-RUN $PIP install --local -e git+https://github.com/rocky/python-xdis.git#egg=xdis
+RUN $PYTHON -m pip install setuptools
 RUN $PIP install --local --no-build-isolation -e git+https://github.com/rocky/python-filecache.git#egg=pyficache
 RUN $PIP install --local -e git+https://github.com/rocky/python-uncompyle6.git#egg=uncompyle6
 RUN $PIP install --local -e git+https://github.com/rocky/python-decompile3.git#egg=decompyle3
 RUN $PIP install git+https://github.com/rocky/python-filecache#egg=pyficache
 RUN $PIP install -e git+https://github.com/Trepan-Debuggers/python3-trepan#egg=trepan3k
-RUN $PIP install -e git+https://github.com/Trepan-Debuggers/python3-trepan#egg=trepan3k
 RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-scanner.git
 RUN (cd Mathics3-scanner && $PIP install -e .[full] && bash -x ./admin-tools/make-JSON-tables.sh)
-RUN $PIP install git+https://github.com/rocky/python-xdis.git
 RUN $PIP install git+https://github.com/Trepan-Debuggers/python3-trepan.git
 
 # #################
@@ -92,14 +91,15 @@ RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
 # We need to add the second repository Rubi, explicitly
 RUN (cd mathics-core && git submodule update --init --recursive && \
     git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
-RUN (cd mathics-core && git submodule && $PIP install -e .[full])
+RUN (cd mathics-core && git submodule && $PIP install -e .[full] --no-build-isolation)
 RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 
 ##############################################
 # Mathics Modules: Trepan, Graph, and Natlang
 ##############################################
-RUN pip install Mathics3-Module-Base
-RUN pip install mathics-pygments
+RUN $PIP install Mathics3-Module-Base
+RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-pygments.git
+RUN (cd Mathics3-pygments && $PIP install -e . --no-build-isolation)
 RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-trepan.git
 RUN (cd Mathics3-trepan && $PIP install --no-build-isolation -e .)
 

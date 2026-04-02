@@ -70,7 +70,7 @@ $DOCKER run \
 		--env "COLORFGBG=$COLORFGBG" \
 		--env="DISPLAY" \
 		--env="ASYMPTOTE_PDFVIEWER=/usr/bin/evince" \
-		--env "PYTHON=/opt/python3.13/bin/python3.13" \
+		--env "PYTHON=/opt/python3.14/bin/python3.14" \
 		--user=$(id -u) \
 		--workdir=/app \
 		--volume="$PWD":/app \

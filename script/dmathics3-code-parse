@@ -23,4 +23,4 @@ $DOCKER run --rm -it \
 		--name mathics3-code-parse \
 		--volume /tmp:/usr/src/app/data \
 		$MATHICS3_IMAGE \
-		--mode mathics3-tokens -- $@
+		--mode mathics3-code-parse -- $@
