@@ -11,7 +11,8 @@ But what if you want both the command-line interface, the Web interface, all of 
 
 That's what this repository is about. Here we have a PyPI installable package that pulls in the various components and offers commands:
 
-* ``mathics3-tokens`` utility to show how an input stream is tokenized by Mathics3
+* ``mathics3-code-tokenize`` utility to show how an input stream is tokenized by Mathics3, similar to ``CodeParser`CodeTokenize``.
+* ``mathics3-code-parse`` utility to show how an input stream is tokenized by Mathics3, similar to ``CodeParser`CodeParse``.
 * ``mathics3script`` to run the command-line interface,
 * ``mathics3server`` to run the Django-Web server,
 * ``dmathics3script`` and ``dmathicsserver``, which runs the docker version of these,
@@ -22,14 +23,14 @@ This repository also contains the Dockerfiles used to create the `mathicsorg/mat
 
 That image is a combination of:
 
-* `Mathics-Scanner <https://github.com/Mathics3/Mathics3-scanner>`_ (WL Character Tables and Mathics Scanner)
+* `Mathics3-scanner <https://github.com/Mathics3/Mathics3-scanner>`_ (WL Character Tables and Mathics Scanner)
 * `mathicsscript <https://github.com/Mathics3/mathicsscript>`_ (Command-line Mathics Interface)
 * `mathics-pygments <https://github.com/Mathics3/mathics-pygments>`_ (WL Syntax Highlighting)
-* `Mathics-Django <https://github.com/Mathics3/Mathics3-django>`_ (Django-based HTTP server)
+* `Mathics3-django <https://github.com/Mathics3/Mathics3-django>`_ (Django-based HTTP server)
 * `mathics-threejs-backend <https://github.com/Mathics3/mathics-threejs-backend>`_ (Graphics3D rendering using threejs)
-* `Mathics-Module-nltk <https://github.com/Mathics3/Mathics3-Module-nltk>`_ (Mathics3 Module for Natural Language Processing add-on via NLTK)
-* `Mathics-Module-PyUI <https://github.com/Mathics3/Mathics3-Module-PyUCI>`_ (Mathics3 Module for ICU - Human-Language Alphabets and Locales via PyICU)
-* `pymathics-graph <https://github.com/Mathics3/Mathics3-Module-networkx>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_.
+* `Mathics3-Module-nltk <https://github.com/Mathics3/Mathics3-Module-nltk>`_ (Mathics3 Module for Natural Language Processing add-on via NLTK)
+* `Mathics3-Module-PyUI <https://github.com/Mathics3/Mathics3-Module-PyUCI>`_ (Mathics3 Module for ICU - Human-Language Alphabets and Locales via PyICU)
+* `Mathics3-Module-networkx <https://github.com/Mathics3/Mathics3-Module-networkx>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_.
 
 It is likely that in the future more components will be added, so stay tuned...
 
@@ -50,7 +51,7 @@ The easier ways to install are to use Python ``pip`` and ``docker``
 
 To install from Python ``pip``::
 
-  pip install Mathics-omnibus
+  pip install Mathics3-omnibus
 
 To install the Docker image, run::
 
@@ -67,7 +68,7 @@ Either before a release or right after a release, things generally match up, tho
 
 I won't repeat how to install Python in developer mode, build a Python package, or how to create an docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
 
-However, Python PIP, ``pyrpoject.toml`` is an important file to consult. And for Docker, the file is ``docker/Dockerfile``.
+However, Python PIP, ``pyproject.toml`` is an important file to consult. And for Docker, the file is ``docker/Dockerfile``.
 
 
 Docker-specific items
@@ -86,23 +87,23 @@ variable ``MATHICS_DJANGO_DB_PATH``. Here is an example:
 
 .. code:: bash
 
-   $ MATHICS_DJANGO_DB_PATH=/usr/src/app/data/mathics-django/mathics.sqlite ../mathics-omnibus/script/dmathicsserver
-   MATHICS_DJANGO_DB_PATH=/usr/src/app/data/mathics-django/mathics.sqlite ../mathics-omnibus/script/dmathicsserver^J-(../mathics-omnibus/script/dmathicsserver:5):  -[2,0, 0]
+   $ MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite
+   MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite^J-(../mathics-omnibus/script/dmathicsserver:5):  -[2,0, 0]
    DOCKER=docker
    -(../mathics-omnibus/script/dmathicsserver:6):  -[2,0, 0]
    MATHICS_DJANGO_DB=mathics.sqlite
    -(../mathics-omnibus/script/dmathicsserver:7):  -[2,0, 0]
-   MATHICS_DJANGO_DB_PATH=/usr/src/app/data/mathics-django/mathics.sqlite
+   MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite
    -(../mathics-omnibus/script/dmathicsserver:9):  -[2,0, 0]
-   docker run -it --name mathics-web --rm --env=DISPLAY --env MATHICS_DJANGO_DB_PATH=/usr/src/app/data/mathics-django/mathics.sqlite --workdir=/app --volume=/src/external-vcs/github/Mathics3/mathics-django:/app --volume=/tmp/.X11-unix:/tmp/.X11-unix:rw -p 8000:8000 -v /tmp:/usr/src/app/data mathicsorg/mathics --mode ui
+   docker run -it --name mathics-web --rm --env=DISPLAY --env MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite --workdir=/app --volume=/src/external-vcs/github/Mathics3/mathics-django:/app --volume=/tmp/.X11-unix:/tmp/.X11-unix:rw -p 8000:8000 -v /tmp:/usr/src/app/data mathicsorg/mathics --mode ui
 
    ~~~~ app/data has been mounted to /usr/src/app/data ~~~~
    ~~~~ SQLite data (worksheets, user info) will be stored in /usr/src/app/data/mathics django/mathics.sqlite ~~~~
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    warning: database file /usr/src/app/data/mathics-django/mathics.sqlite not found
+    warning: database file /home/ubunutu/.local/var/Mathics3/mathics.sqlite not found
 
-    Migrating database /usr/src/app/data/mathics-django/mathics.sqlite
+    Migrating database /home/ubunutu/.local/var/Mathics3/mathics.sqlite
     Operations to perform:
       Apply all migrations: auth, contenttypes, sessions, sites, web
     Running migrations:
