@@ -91,7 +91,7 @@ RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
 # We need to add the second repository Rubi, explicitly
 RUN (cd mathics-core && git submodule update --init --recursive && \
     git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
-RUN (cd mathics-core && git submodule && $PIP install -e .[full] --no-build-isolation)
+RUN (cd mathics-core && git submodule && $PIP install -e .[full,cython] --no-build-isolation)
 RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 
 ##############################################
@@ -113,10 +113,6 @@ RUN $PIP install --no-build-isolation -e "git+https://github.com/Mathics3/Mathic
 RUN $PIP install spacy wordcloud
 RUN $PYTHON -m spacy download en_core_web_md
 RUN $PIP install nltk
-
-# ENV DATA_DIR=/usr/src/app/mathics-core/mathics/doc/latex/
-# ENV DOCTEST_LATEX_DATA_PCL=/usr/src/app/mathics-core/mathics/doc/latex/doctext_latex_data.pcl
-# ENV DOCTEST_USER_HTML_DATA_PATH=/usr/src/app/mathics-core/mathics/doc/doc_html_data.pcl
 
 #######################
 # LaTeX/PDF generation
@@ -142,13 +138,14 @@ RUN git clone --depth 1 https://github.com/Mathics3/Mathics3-django.git
 RUN (cd Mathics3-django && make build)
 # # RUN $PYTHON -m pip install -e git+https://github.com/Mathics3/Mathics3-django#egg=Mathics3-Django[full]
 # # RUN $PYTHON -m pip install "Mathics-Django[full]>=7.0.0"
-
 # # RUN (cd src/Mathics3-django && PIP=$PIP make)
 # RUN (cd Mathics3-django && $PYTHON Mathics3_django/docpipeline.py -ok) || true
-COPY src/doc_html_data.pcl doc_html_data.pcl
 RUN mkdir -p ${MATHICS3_HOME}/.local/var/Mathics3/
-RUN mv -v doc_html_data.pcl /home/ubuntu/.local/var/Mathics3/doc_data_html.pcl
 RUN (cd Mathics3-django && $PYTHON -m pip install --no-build-isolation -e .)
+# ENV DATA_DIR=/usr/src/app/mathics-core/mathics/doc/latex/
+# ENV DOCTEST_LATEX_DATA_PCL=/usr/src/app/mathics-core/mathics/doc/latex/doctext_latex_data.pcl
+ENV DOCTEST_USER_HTML_DATA_PATH=/home/ubuntu/Mathics3-django/mathics_django/doc_data_html.pcl
+COPY src/doc_html_data.pcl /home/ubuntu/Mathics3-django/mathics_django/doc_data_html.pcl
 
 ##################
 # Mathicsscript  #
@@ -166,7 +163,7 @@ RUN (cd mathicsscript && $PYTHON -m pip install -e .[full])
 # ##################
 # RUN apt-get install -y -qq emacs
 # RUN pip install trepan3k
-# # RUN pip install remake
+# RUN pip install remake
 
 ##################
 # Finish up      #
