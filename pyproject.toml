@@ -45,9 +45,11 @@ include = ["script/dmathics3"]
 
 [tool.poetry.scripts]
 dmathics3 = { reference = "script/dmathics3", type = "file" }
-dmathics3-tokens = { reference = "script/dmathics3-tokens", type = "file" }
+dmathics3-parser = { reference = "script/dmathics3-parse", type = "file" }
+dmathics3-tokenize = { reference = "script/dmathics3-tokenize", type = "file" }
 dmathics3copy = { reference = "script/dmathics3copy", type = "file" }
 dmathics3doc = { reference = "script/dmathics3doc", type = "file" }
+dmathics3Server = { reference = "script/dmathics3server", type = "file" }
 
 [tool.setuptools.packages.find]
 include = ["mathics3_omnibus*"]

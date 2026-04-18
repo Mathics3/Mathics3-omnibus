@@ -1,0 +1,144 @@
+#!/bin/bash
+set -e
+if [ -n "$DEBUG" ]; then
+    set -x
+fi
+
+
+# The release name we are configured to run under.
+# FIXME: get from mathics_omnibus_version
+typeset dmathicsserver_version='5.0.0.dev0'
+
+#########################################################
+# Allow customization using POSIX environment variables:
+#########################################################
+
+APP_DATADIR=${APP_DATADIR:-/tmp}  #
+
+CONFIGDIR=${CONFIGDIR:-$HOME/.config/mathicsscript/}
+
+# Graphics Device that mathicsscript will use to output graphics
+if [[ -r /dev/dri ]]; then
+    DEFAULT_GRAPHICS_DEVICE='--device=/dev/dri:/dev/dri'
+fi
+GRAPHICS_DEVICE=${DEFAULT_GRAPHICS_DEVICE:-''}
+
+DOCKER=${DOCKER:-docker}
+
+# TODO: allow setting:
+#	MATHICSSCRIPT_HISTSIZE \
+
+# MPLCONFIGDIR is the workspace and configuration directory for matplotlib
+MPLCONFIGDIR=${MPLCONFIGDIR:-/tmp}
+
+# Docker tag we use by default
+TAG=${TAG:-latest}
+
+XAUTH=${XAUTH:-$HOME/.Xauthority}
+touch $XAUTH
+
+# Docker mathics contianer we use.
+# Note: has to come af we set after TAG
+MATHICS3_IMAGE=${MATHICS3_IMAGE:-mathicsorg/mathics:${TAG}}
+
+
+# end customization section
+#########################################################
+
+typeset -a stripped_args
+stripped_args=()
+e_args=()
+typeset -a args
+typeset -i n=$#
+for ((i=1; i<=n; i++)) ; do
+    arg=$1
+    shift
+    case "$arg" in
+	-e)
+	    # for -e we need to quote its argument
+	    e_args[0]="-e"
+	    e_args[1]=$1
+	    shift
+	    ((i+=1))
+	    ;;
+        -h | --help | help )
+		cat <<_EOH
+Usage: dmathicsscript [OPTIONS]
+
+  A command-line interface to Mathics run in a docker container
+
+Options specfic to dmathicsscript:
+
+  -u | -U | --upgrade | upgrade
+  Pull updates to the docker container if there is a new image.
+
+  -h | --help | help
+  Show this help.
+
+  -v | -V | --version
+  Show the dmathicsscript version and exit.
+
+Useful Environment Variables:
+
+APP_DATADIR: where application data should be saved. The default is: ${APP_DATADIR}
+DOCKER: the name of the docker program to run. The default is: ${DOCKER}
+CONFIGDIR: directory where Mathics command history is saved. The default is: ${CONFIGDIR}
+MATHICS3_IMAGE: Mathics image to use. The default is: ${MATHICS3_IMAGE}
+TAG: tag used in MATHICS3_IMAGE above. The default is: ${TAG}
+XAUTH: .Xauthority file. The default is: ${XAUTH}
+
+We will now pass help along to the docker image. Just a sec...
+
+_EOH
+		stripped_args+=("--help")
+		;;
+        -u | -U | --upgrade | upgrade)
+		$DOCKER pull $MATHICS3_IMAGE
+		exit $?
+		;;
+        -v | -V | --version)
+		echo "dmathicsserver version ${dmathicsserver_version}"
+		exit 100
+		;;
+	* | default)
+		stripped_args[$i]=$arg
+		;;
+    esac
+done
+
+cd $(dirname ${BASH_SOURCE[0]})
+source ./term-background.sh
+
+[[ -x ./term-background.sh ]] && source ./term-background.sh
+
+if [[ $COLORFGBG == '15;0' ]] ; then
+    # Dark background
+    style="--style inkpot"
+
+else
+    # Light background
+    style="--style colorful"
+fi
+
+# Show environment variables
+for env_setting in CONFIGDIR APP_DATADIR MATHICS3_IMAGE DISPLAY; do
+	echo $env_setting = ${!env_setting}
+done
+
+$DOCKER run \
+	--rm \
+	--env "COLORFGBG=$COLORFGBG" \
+	--env "DISPLAY=$DISPLAY" \
+	--env "PYTHON=/opt/python3.12/bin/python3.12" \
+	--env "MPLCONFIGDIR=${MPLCONFIGDIR}" \
+	--name mathics-cli \
+	--tty \
+	--user=$(id -u) \
+	--interactive \
+	--network=host \
+	--volume="$PWD":/app \
+	--volume "${APP_DATADIR}:/home/ubuntu/.local/var/" \
+	--volume "${CONFIGDIR}:/home/ubuntu/.config/mathicsscript" \
+	$GRAPHICS_DEVICE \
+    $MATHICS3_IMAGE \
+	--mode cli -- $style ${stripped_args[@]} ${e_args[0]} "${e_args[1]}"

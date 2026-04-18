@@ -2,9 +2,9 @@
 # This is the docker entry point and gets installed as /usr/local/bin/mathics.sh
 
 USER_HOME="/home/ubuntu"
-MATHICS_DJANGO_SYSTEM_DB_PATH="${USER_HOME}/.local/var/Mathics3/mathics.sqlite"
+MATHICS_DJANGO_SYSTEM_DB_PATH="${USER_HOME}/.local/var/Mathics3/mathics3.sqlite"
 
-export PATH="/opt/python3.13/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${USER_HOME}/.local/bin"
+export PATH="/opt/python3.14/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${USER_HOME}/.local/bin"
 export PYTHONBREAKPOINT=trepan.api.debug
 
 script_cmd="${ENTRYPOINT_COMMAND:-$(basename $0)}"
@@ -57,17 +57,19 @@ done
 case $mathics_mode in
     cli) mathicsscript $@
 		 ;;
-    mathics3-tokens) mathics3-tokens $@
+    mathics3-code-tokenize) mathics3-code-tokenize $@
+		 ;;
+    mathics3-code-parse) mathics3-code-parse $@
 		 ;;
     minimal|mathics|mathics3)
-		mathics $@
+		mathics3 $@
 		;;
     document|pdf)
-		evince ${USER_HOME}/mathics-core/mathics/doc/latex/mathics.pdf
+		evince ${USER_HOME}/mathics-core/mathics/doc/latex/mathics3.pdf
 		;;
     copy)
 		echo "Copying mathics.pdf to host-attached filesystem ${TEMPDIR}."
-		cp ${USER_HOME}/mathics-core/mathics/doc/latex/mathics.pdf /usr/src/app/data/mathics.pdf
+		cp ${USER_HOME}/mathics-core/mathics/doc/latex/mathics3.pdf /usr/src/app/data/mathics3.pdf
 		;;
     django|ui|gui)
 	echo
@@ -79,11 +81,11 @@ case $mathics_mode in
 			cp -vp $MATHICS_DJANGO_SYSTEM_DB_PATH $MATHICS_DJANGO_DB_PATH
 		fi
 	else
-	    echo "~~~~ SQLite data (worksheets, user info) will be stored in $MATHICS_HOME/data/mathics.sqlite"
+	    echo "~~~~ SQLite data (worksheets, user info) will be stored in $MATHICS_HOME/data/mathics3.sqlite"
 	fi
 	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	echo
-	mathicsserver -e $@ ;;
+	Mathics3server runserver $@ ;;
     shell)  /bin/bash ;;
     *)   echo "unknown mathics_mode=$mathics_mode. See '$script_cmd --help'" ; exit 2 ;;
 esac
