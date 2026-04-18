@@ -28,9 +28,9 @@ That image is a combination of:
 * `mathics-pygments <https://github.com/Mathics3/mathics-pygments>`_ (WL Syntax Highlighting)
 * `Mathics3-django <https://github.com/Mathics3/Mathics3-django>`_ (Django-based HTTP server)
 * `mathics-threejs-backend <https://github.com/Mathics3/mathics-threejs-backend>`_ (Graphics3D rendering using threejs)
-* `Mathics3-Module-nltk <https://github.com/Mathics3/Mathics3-Module-nltk>`_ (Mathics3 Module for Natural Language Processing add-on via NLTK)
-* `Mathics3-Module-PyUI <https://github.com/Mathics3/Mathics3-Module-PyUCI>`_ (Mathics3 Module for ICU - Human-Language Alphabets and Locales via PyICU)
-* `Mathics3-Module-networkx <https://github.com/Mathics3/Mathics3-Module-networkx>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_.
+* `Mathics3-Module-nltk <https://github.com/Mathics3/Mathics3-Module-nltk>`_ (Mathics3 Module for Natural Language Processing add-on via NLTK).
+* `Mathics3-Module-PyUI <https://github.com/Mathics3/Mathics3-Module-PyUCI>`_ (Mathics3 Module for ICU - Human-Language Alphabets and Locales via PyICU).
+* `Mathics3-Module-networkx <https://github.com/Mathics3/Mathics3-Module-networkx>`_ (Graph add-on based on `NetworkX <https://networkx.org/>`_).
 
 It is likely that in the future more components will be added, so stay tuned...
 
@@ -66,7 +66,7 @@ Beware that there is always a bit of churn in the code base. So what is in GitHu
 
 Either before a release or right after a release, things generally match up, though.
 
-I won't repeat how to install Python in developer mode, build a Python package, or how to create an docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
+I won't repeat how to install Python in developer mode, build a Python package, or create a Docker image. For that, use whatever generic help mechanism you use for helping with these generic kinds of tasks.
 
 However, Python PIP, ``pyproject.toml`` is an important file to consult. And for Docker, the file is ``docker/Dockerfile``.
 
@@ -101,9 +101,9 @@ variable ``MATHICS_DJANGO_DB_PATH``. Here is an example:
    ~~~~ SQLite data (worksheets, user info) will be stored in /usr/src/app/data/mathics django/mathics.sqlite ~~~~
    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    warning: database file /home/ubunutu/.local/var/Mathics3/mathics.sqlite not found
+    warning: database file /home/ubuntu/.local/var/Mathics3/mathics.sqlite not found
 
-    Migrating database /home/ubunutu/.local/var/Mathics3/mathics.sqlite
+    Migrating database /home/ubuntu/.local/var/Mathics3/mathics.sqlite
     Operations to perform:
       Apply all migrations: auth, contenttypes, sessions, sites, web
     Running migrations:
