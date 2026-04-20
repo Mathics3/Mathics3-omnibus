@@ -117,7 +117,7 @@ RUN (cd trepan3k-mathics-debugger && $PIP install -e .)
 RUN $PIP install spacy wordcloud
 RUN $PYTHON -m spacy download en_core_web_md
 RUN $PIP install nltk
-RUN $PIP install Mathics3-Module-nltk Mathics3-Module-networkx
+RUN $PIP install Mathics3-Module-nltk Mathics3-Module-networkx Mathics3-Module-PyICU
 
 #######################
 # LaTeX/PDF generation
