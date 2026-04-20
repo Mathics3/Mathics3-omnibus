@@ -1,5 +1,5 @@
 #!/bin/bash
-# This is the docker entry point and gets installed as /usr/local/bin/mathics.sh
+# This is the docker entry point and gets installed as /usr/local/bin/mathics3_omnibus.sh
 
 USER_HOME="/home/ubuntu"
 MATHICS_DJANGO_SYSTEM_DB_PATH="${USER_HOME}/.local/var/Mathics3/mathics3.sqlite"
@@ -71,7 +71,7 @@ case $mathics_mode in
 		echo "Copying mathics.pdf to host-attached filesystem ${TEMPDIR}."
 		cp ${USER_HOME}/mathics-core/mathics/doc/latex/mathics3.pdf /usr/src/app/data/mathics3.pdf
 		;;
-    django|ui|gui)
+    Django|django|ui|gui|Mathics3server)
 	echo
 	echo "~~~~ app/data has been mounted to $MATHICS_HOME/data ~~~~"
 	if [[ -n $MATHICS_DJANGO_DB_PATH ]]; then
@@ -85,7 +85,7 @@ case $mathics_mode in
 	fi
 	echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 	echo
-	Mathics3server runserver $@ ;;
+	Mathics3Server $@ ;;
     shell)  /bin/bash ;;
     *)   echo "unknown mathics_mode=$mathics_mode. See '$script_cmd --help'" ; exit 2 ;;
 esac

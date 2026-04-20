@@ -203,8 +203,8 @@ RUN (cd src/mathicsscript && make)
 # Cleanup
 RUN rm -fr /tmp*_amd64.deb /tmp/*.whl
 
-COPY entrypoint.sh /usr/local/bin/mathics-omnibus.sh
-RUN chmod +x /usr/local/bin/mathics-omnibus.sh
+COPY entrypoint.sh /usr/local/bin/mathics3-omnibus.sh
+RUN chmod +x /usr/local/bin/mathics3-omnibus.sh
 
 EXPOSE 8000
 
@@ -220,6 +220,6 @@ USER mathics
 RUN ${PYTHON} -m spacy download en_core_web_md
 RUN ${PYTHON} -m nltk.downloader wordnet omw-1.4
 
-ENTRYPOINT ["/usr/local/bin/mathics-omnibus.sh"]
+ENTRYPOINT ["/usr/local/bin/mathics3-omnibus.sh"]
 
 CMD ["--help"]

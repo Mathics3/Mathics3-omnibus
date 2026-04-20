@@ -95,8 +95,8 @@ RUN $PYTHON -m spacy download en_core_web_md
 RUN $PIP install nltk
 RUN $PIP install Mathics3-Module-nltk
 
-COPY entrypoint.sh /usr/local/bin/mathics-omnibus.sh
-RUN chmod +x /usr/local/bin/mathics-omnibus.sh
+COPY entrypoint.sh /usr/local/bin/mathics3-omnibus.sh
+RUN chmod +x /usr/local/bin/mathics3-omnibus.sh
 COPY src/mathics.pdf mathics-core/mathics/doc/latex/mathics.pdf
 
 
@@ -112,6 +112,6 @@ RUN chown -R ubuntu:ubuntu ${MATHICS3_HOME}/data
 USER ubuntu
 RUN $PYTHON -m nltk.downloader wordnet2022 omw-1.4
 
-ENTRYPOINT ["/usr/local/bin/mathics-omnibus.sh"]
+ENTRYPOINT ["/usr/local/bin/mathics3-omnibus.sh"]
 
 CMD ["--help"]

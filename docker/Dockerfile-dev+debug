@@ -171,8 +171,8 @@ RUN pip install remake
 # Cleanup
 # RUN rm -fr /tmp*_amd64.deb /tmp/*.whl
 
-COPY entrypoint.sh /usr/local/bin/mathics-omnibus.sh
-RUN chmod +x /usr/local/bin/mathics-omnibus.sh
+COPY entrypoint.sh /usr/local/bin/mathics3-omnibus.sh
+RUN chmod +x /usr/local/bin/mathics-omnibus3.sh
 
 EXPOSE 8000
 
@@ -186,6 +186,6 @@ RUN chown -R ubuntu:ubuntu ${MATHICS3_HOME}/data
 USER ubuntu
 RUN $PYTHON -m nltk.downloader wordnet2022 omw-1.4
 
-ENTRYPOINT ["/usr/local/bin/mathics-omnibus.sh"]
+ENTRYPOINT ["/usr/local/bin/mathics3-omnibus.sh"]
 
 CMD ["--help"]
