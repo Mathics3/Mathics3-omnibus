@@ -31,6 +31,7 @@ RUN apt-get install -y -qq \
     git \
     gyp \
     latexmk texlive-xetex \
+    libicu-dev \
     libffi-dev \
     liblapack-dev \
     libmysqlclient-dev \
@@ -87,13 +88,14 @@ RUN $PIP install Mathics3-scanner
 # # Mathics3 core #
 # #################
 
-RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
+RUN $PIP install Mathics3
+# RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
 # For reasons I don't understand, "submodule init" only adds the first repository.
 # We need to add the second repository Rubi, explicitly
-RUN (cd mathics-core && git submodule update --init --recursive && \
-    git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
-RUN (cd mathics-core && git submodule && $PIP install -e .[full,cython] --no-build-isolation)
-RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
+# RUN (cd mathics-core && git submodule update --init --recursive && \
+#     git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
+# RUN (cd mathics-core && git submodule && $PIP install -e .[full,cython] --no-build-isolation)
+# RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
 
 ##############################################
 # Mathics Modules: Trepan, Networkx, and NLTK
