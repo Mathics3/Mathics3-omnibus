@@ -1,12 +1,26 @@
+10.0.0
+-----
+
+May 3, 2026
+
+
+* Synchronize version number up with major API 10.0 release in Mathics3 Core and Scanner
+* scripts renamed to dmathics3* now.
+* `dmathics3-tokens` is now `dmathics3-codeparser-tokenize`
+* `dmathics3-codeparser-parse` added
+* Use newer versions of everything, Ubuntu 26:04, Python 3.14, SymPy, etc.
+
+Jan 28, 2025
+
 8.0.0
 -----
 
 Jan 28, 2025
 
-* Synchronize version number up with major API release in Mathics Kernel
+* Synchronize version number up with major API release in Mathics3 Core and Scanner
 * Add `dmathics3-tokens` interface to `mathics3-tokens` (from mathics-scanner)
 * Use newer versions of everything, Ubuntu, Python, SymPy, etc.
-* Remove lots of copies of old wheels from source; we can now get everything resonably fast from inside docker
+* Remove lots of copies of old wheels from source; we can now get everything reasonably fast from inside docker
 
 
 4.0.1

@@ -5,10 +5,12 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Mathics3-omnibus"
+name = "mathics3_omnibus"
 description = "A Collection Mathics3 components to provide the full Mathics3 experience"
 dependencies = [
     "Mathics3[full] >= 10.0",
+    "Mathics3_django >= 10.0",
+    "Mathics3_pygments >= 10.0",
     "mathicsscript[full] >= 10.0",
     "Mathics3-Module-nltk >= 10.0",
     "Mathics3-Module-PyICU >= 10.0",
@@ -50,7 +52,8 @@ script-files = [
     "script/dmathics3copy",
     "script/dmathics3script",
     "script/dmathics3doc",
-    "script/dMathics3Server"
+    "script/dMathics3Server",
+    "script/term-background.sh",
 ]
 
 [tool.setuptools.packages.find]
