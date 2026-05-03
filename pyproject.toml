@@ -45,8 +45,8 @@ include = ["script/dmathics3"]
 [tool.setuptools]
 script-files = [
     "script/dmathics3",
-    "script/dmathics3-code-parse",
-    "script/dmathics3-code-tokenize",
+    "script/dmathics3-codeparser-parse",
+    "script/dmathics3-codeparser-tokenize",
     "script/dmathics3copy",
     "script/dmathics3script",
     "script/dmathics3doc",
