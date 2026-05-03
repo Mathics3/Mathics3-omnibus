@@ -82,10 +82,8 @@ Since this is tied to the Docker image, any changes made won't survive
 across restarting the Docker image.
 
 If you would like to save your own, you can set the environment
-variable ``MATHICS_DJANGO_DB_PATH``. Here is an example:
+variable ``MATHICS_DJANGO_DB_PATH``. Here is an example::
 
-
-.. codeblock:: bash
 
    $ MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite
    MATHICS_DJANGO_DB_PATH=/home/ubunutu/.local/var/Mathics3/mathics.sqlite^J-(../mathics-omnibus/script/dmathicsserver:5):  -[2,0, 0]

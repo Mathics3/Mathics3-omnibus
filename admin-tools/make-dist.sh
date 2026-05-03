@@ -1,5 +1,5 @@
 #!/bin/bash
-PACKAGE=Mathics-omnibus
+PACKAGE=mathics3_omnibus
 
 # FIXME put some of the below in a common routine
 function finish {
@@ -16,22 +16,14 @@ fi
 
 
 cd ..
-source mathics_omnibus/version.py
+source mathics3_omnibus/version.py
 echo $__version__
 
-for pyversion in $PYVERSIONS; do
-    if ! pyenv local $pyversion ; then
-	exit $?
-    fi
-    # pip bdist_egg create too-general wheels. So
-    # we narrow that by moving the generated wheel.
-
-    # Pick out first two number of version, e.g. 3.7.9 -> 37
-    first_two=$(echo $pyversion | cut -d'.' -f 1-2 | sed -e 's/\.//')
-    rm -fr build
-    python setup.py bdist_egg
-    python setup.py bdist_wheel
-    python setup.py bdist_wheel --universal
-done
-
-python ./setup.py sdist
+pyversion=3.13
+if ! pyenv local $pyversion ; then
+    exit $?
+fi
+rm -fr build
+python -m build --wheel
+python -m build --sdist
+finish
