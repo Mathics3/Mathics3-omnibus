@@ -54,12 +54,13 @@ for env_setting in MATHICS3_IMAGE DISPLAY; do
 done
 
 $DOCKER run -it \
-  --name mathics-doc \
+  --name Mathics3-doc \
   --rm \
+  --user=$(id -u) \
   --env="DISPLAY" \
+  --ipc=host \
   --workdir=/app \
   --volume="$PWD":/app \
-  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-  --volume="/tmp:/usr/src/app/data" \
+  --network=host \
   $MATHICS3_IMAGE \
   --mode pdf -- $@

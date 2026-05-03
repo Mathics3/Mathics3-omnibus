@@ -42,13 +42,16 @@ Homepage = "https://mathics.org/"
 [tool.poetry]
 include = ["script/dmathics3"]
 
-[tool.poetry.scripts]
-dmathics3 = { reference = "script/dmathics3", type = "file" }
-dmathics3-parser = { reference = "script/dmathics3-parse", type = "file" }
-dmathics3-tokenize = { reference = "script/dmathics3-tokenize", type = "file" }
-dmathics3copy = { reference = "script/dmathics3copy", type = "file" }
-dmathics3doc = { reference = "script/dmathics3doc", type = "file" }
-dMathics3Server = { reference = "script/dmathics3server", type = "file" }
+[tool.setuptools]
+script-files = [
+    "script/dmathics3",
+    "script/dmathics3-code-parse",
+    "script/dmathics3-code-tokenize",
+    "script/dmathics3copy",
+    "script/dmathics3script",
+    "script/dmathics3doc",
+    "script/dMathics3Server"
+]
 
 [tool.setuptools.packages.find]
 include = ["mathics3_omnibus*"]
