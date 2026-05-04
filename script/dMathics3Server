@@ -10,7 +10,7 @@ typeset dmathicsserver_version='10.0.0'
 # Allow customization using POSIX environment variables:
 APP_DATADIR=${APP_DATADIR:-/tmp}
 DOCKER=${DOCKER:-docker}
-ASYMPTOTE_PDFVIEWER=${ASYMPTOTE_PDFVIWER:-/usr/bin/evince}
+ASYMPTOTE_PDFVIEWER=${ASYMPTOTE_PDFVIWER:-/usr/bin/papers}
 USER_HOME="/home/ubuntu"
 MATHICS3_DJANGO_DB=${MATHICS_DJANGO_DB:-"mathics3.sqlite"}
 MATHICS3_DJANGO_DB_PATH=${MATHICS_DJANGO_DB_PATH:-${USER_HOME}/.local/var/Mathics3/${MATHICS3_DJANGO_DB}}

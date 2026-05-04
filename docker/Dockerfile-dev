@@ -25,7 +25,6 @@ RUN apt-get update -y && apt-get upgrade -y -qq
 RUN apt-get install -y -qq \
     asymptote \
     cargo \
-    evince \
     enchant-2 \
     gfortran \
     git \
@@ -47,6 +46,7 @@ RUN apt-get install -y -qq \
     mesa-utils \
     nodejs \
     npm \
+    papers \
     pkg-config \
     pyqt5-dev-tools \
     python3-pip \
@@ -89,13 +89,12 @@ RUN $PIP install Mathics3-scanner
 # #################
 
 RUN $PIP install Mathics3
-# RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
+RUN git clone --depth 1 https://github.com/Mathics3/mathics-core.git
 # For reasons I don't understand, "submodule init" only adds the first repository.
 # We need to add the second repository Rubi, explicitly
 # RUN (cd mathics-core && git submodule update --init --recursive && \
-#     git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
-# RUN (cd mathics-core && git submodule && $PIP install -e .[full,cython] --no-build-isolation)
-# RUN (cd mathics-core && bash ./admin-tools/make-JSON-tables.sh)
+#      git submodule add https://github.com/Mathics3/Mathics3-Rubi.git mathics/Packages/Rubi)
+ RUN (cd mathics-core && git submodule && $PIP install -e .[full,cython] --no-build-isolation)
 
 ##############################################
 # Mathics Modules: Trepan, Networkx, and NLTK

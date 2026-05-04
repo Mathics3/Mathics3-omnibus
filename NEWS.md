@@ -66,7 +66,7 @@ Above, since by default `APP_DATADIR` maps `/usr/src/app/data` to `/tmp`, on the
 This version builds the PDF and stores that in the docker container. As a result two new
 command and front-end shell scripts were added:
 
-* `dmathicsdoc` will run _evince_ over the Mathics book that was built when the container was built.
+* `dmathicsdoc` will run _papers_ over the Mathics book that was built when the container was built.
 * `dmathicsdoccopy` will copy the Mathics book that was built when the container was built.
 
 The script for going into `mathicsscript` has been enhanced to try to detect the terminal background.

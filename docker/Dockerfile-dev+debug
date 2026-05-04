@@ -1,5 +1,5 @@
 # -*- Dockerfile -*-
-FROM ubuntu:25.04
+FROM ubuntu:26.04
 
 ENV MATHICS3_HOME=/home/ubuntu
 ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang,pymathics.trepan"
@@ -25,7 +25,7 @@ RUN apt-get update -y && apt-get upgrade -y -qq
 RUN apt-get install -y -qq \
     asymptote \
     cargo \
-    evince \
+    papers \
     gfortran \
     git \
     gyp \
@@ -61,10 +61,10 @@ RUN apt-get install -y -qq \
 # # defer deletion until close to the end
 # # RUN rm -fr /tmp*_amd64.deb
 
-RUN /usr/bin/python3.13 -m venv /opt/python3.13
-ENV PATH=.:/opt/python3.13/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV PYTHON=/opt/python3.13/bin/python3.13
-ENV PIP=/opt/python3.13/bin/pip
+RUN /usr/bin/python3.14 -m venv /opt/python3.14
+ENV PATH=.:/opt/python3.14/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV PYTHON=/opt/python3.14/bin/python3.14
+ENV PIP=/opt/python3.14/bin/pip
 RUN $PYTHON -m pip install --upgrade pip
 
 #########################

@@ -25,7 +25,7 @@ RUN apt-get update -y && apt-get upgrade -y -qq
 RUN apt-get install -y -qq \
     asymptote \
     cargo \
-    evince \
+    papers \
     enchant-2 \
     gfortran \
     git \

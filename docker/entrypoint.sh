@@ -65,7 +65,7 @@ case $mathics_mode in
 		mathics3 $@
 		;;
     document|pdf)
-		evince ${USER_HOME}/mathics-core/mathics/doc/latex/mathics3.pdf
+		papers ${USER_HOME}/mathics-core/mathics/doc/latex/mathics3.pdf
 		;;
     copy)
 		echo "Copying mathics.pdf to host-attached filesystem ${TEMPDIR}."

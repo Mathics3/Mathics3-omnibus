@@ -1,9 +1,8 @@
-FROM ubuntu:jammy
+FROM ubuntu:26.04
 
 ENV MATHICS_HOME=/usr/src/app
 
-ENV ASY_VERSION=asymptote-2.78
-ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang"
+ENV MATHICS3_MODULE_OPTION="--load-module pymathics.graph,pymathics.natlang,pymathics.trepan"
 
 ENV ENTRYPOINT_COMMAND="docker run -it {MATHICS3_IMAGE}"
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
@@ -25,7 +24,7 @@ RUN apt-get update -y && apt-get upgrade -y -qq
 # Install lots of packages
 RUN apt-get install -y -qq \
     cargo \
-    evince \
+    papers \
     gfortran \
     git x11-apps \
     gyp \
